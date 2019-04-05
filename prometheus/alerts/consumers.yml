@@ -1,0 +1,11 @@
+groups:
+  - name: CheckConsumers
+    rules:
+      - alert: NoConsumer
+        expr: rabbitmq_queue_consumers == 0
+        for: 30m
+        labels:
+          severity: error
+        annotations:
+          summary: "No consumer (instance {{ $labels.instance }})"
+          description: "Queue has no consumer\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"

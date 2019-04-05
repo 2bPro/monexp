@@ -1,0 +1,58 @@
+version: '3'
+services:
+    rabbitmq:
+        image: 'rabbitmq:3.7-management-alpine'
+        hostname: rabbitmq
+        expose:
+            - '9090'
+        ports:
+            - "4369:4369"
+            - "5671:5671"
+            - '5672:5672'  # AMQP
+            - '15672:15672'  # management console
+            - "25672:25672"
+
+    rabbitmq_exporter:
+        image: kbudde/rabbitmq-exporter
+        ports:
+            - '9999:9090'
+        environment:
+            RABBIT_URL: "http://rabbitmq:15672"
+            RABBIT_USER: "guest"
+            RABBIT_PASSWORD: "guest"
+            PUBLISH_PORT: "9090"
+            OUTPUT_FORMAT: "JSON"
+            LOG_LEVEL: "debug"
+        depends_on:
+            - rabbitmq
+
+    prometheus:
+        image: 'prom/prometheus:v2.8.1'
+        ports:
+            - '9090:9090'
+        volumes:
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus/alerts/rules.yml:/etc/prometheus/alerts/rules.yml
+        depends_on:
+            - rabbitmq
+
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        depends_on:
+            - prometheus
+
+    consumer:
+        build: consumer
+        environment:
+            AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+        depends_on:
+            - prometheus
+
+    publisher:
+        build: producer
+        environment:
+            AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+        depends_on:
+            - consumer
