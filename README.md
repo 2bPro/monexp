@@ -14,3 +14,6 @@ The purpose of this project is to monitor a simple RabbitMQ queue and automatica
 * restart consumer if failed
 * prevent consumer from failing by starting another consumer
 * stop consumers if not needed (depending on usage)
+
+### Possible system workflow
+![Monitoring System Workflow](https://drive.google.com/uc?export=view&id=1mJSsiUr52PYvBV0ia_bV0_AhmwzhgkDm)
