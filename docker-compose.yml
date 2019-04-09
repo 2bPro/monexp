@@ -32,6 +32,8 @@ services:
             - '9090:9090'
         volumes:
             - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus/alerts/unacked_msg.yml:/etc/prometheus/alerts/unacked_msg.yml
+            - ./prometheus/alerts/no_consumers.yml:/etc/prometheus/alerts/no_consumers.yml
         depends_on:
             - rabbitmq_exporter
 

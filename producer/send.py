@@ -14,7 +14,7 @@ def main():
     channel = create_channel(connection)
     count = 0
 
-    while count < 10:
+    while count < 1000:
         create_thread(channel)
         count = count + 1
     

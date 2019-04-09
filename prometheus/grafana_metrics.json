@@ -17,7 +17,7 @@
   "gnetId": 2121,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1554461557011,
+  "iteration": 1554820679143,
   "links": [],
   "panels": [
     {
@@ -739,10 +739,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "ALERTS{alertname=\"NoConsumer\"}",
+          "expr": "ALERTS{alertname=\"ConsumerStruggling\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
+        },
+        {
+          "expr": "ALERTS{alertname=\"NoConsumer\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "refId": "B"
         }
       ],
       "thresholds": [],

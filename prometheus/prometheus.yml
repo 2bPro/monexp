@@ -4,7 +4,8 @@ global:
       monitor: 'rabbitmq-monitor'
 
 rule_files:
-  - 'alerts/*.yml'
+  - 'alerts/unacked_msg.yml'
+  - 'alerts/no_consumers.yml'
 
 scrape_configs:
   - job_name: 'prometheus'
