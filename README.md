@@ -37,6 +37,28 @@ This will make the following localhost ports available for monitoring:
 #### RabbitMQ
 
 
+#### Prometheus
+
+
+#### Grafana
+The first step when monitoring with Grafana is creating a Data Source for Prometheus in order to link Grafana to the Prometheus metric readings of RabbitMQ. In order to do this, open the configuration options in the side menu and select the 'Data Source' option.
+
+![Creating a data source](https://drive.google.com/uc?export=view&id=1s9AbCskDcmLO6DPoIMNXMmISeqNYMw0L)
+
+This will open a set of data source options recgnised by Grafana. Selecting Prometheus will take you to the following page. Here, select the host and port where Prometheus management console is currently running and specify that this is being accessed via a browser. Clicking save and test should show a confirmation message for the creation of the data source and a confirmation message for a successful connection.
+
+![Connecting to Prometheus](https://drive.google.com/uc?export=view&id=1WrCPTvS6MKFdIh2PjxEIAF70KmXZsULm)
+
+Now you can choose whether to create a new dashboard or use pre-built community dashboards. I imported a community dashboard with ID '2121'. To import this, open the create options in the side menu and select import. Type in the dashboard ID and load dashboard or copy and paste the JSON found under the 'prometheus' folder. This has an additional graph showing the number of active alerts.
+
+After loading the dashboard, select a name, folder and select the previously created data source. Finally, click import to load the dashboard.
+
+![Importing dashboard](https://drive.google.com/uc?export=view&id=1G-3wK9CXblRSya_EmL2_AH7NqGq1WUMD)
+
+On the dashboard you should be able to see that the RabbitMQ server is up and running and for how long, the number of exchanges between the producer and the consumer, the number of channels, consumers, connections, queues, the status of the messages and how many of them are ready, published, delivered or unacknowledged, the total number of messages in the queue, how much of RabbitMQ's memory is used in the transfer, number of used file descriptors and number of open sockets.
+
+![Looking at the dashboard](https://drive.google.com/uc?export=view&id=1z9pz1JhevHJ_G2bxeY4UG2_x3dGmN0w-)
+
 ### Activity subject to action
 * number of unacknowledged messages (if high and close to no of delivered for long periods of time)
 * number of ready messages (if high for long periods of time)
@@ -47,7 +69,7 @@ This will make the following localhost ports available for monitoring:
 
 ### Actions
 * restart consumer if failed
-* start additional consumers in order to release pressure on the consumer(s)
+* start additional consumers in order to alleviate pressure on the consumer(s)
 * stop consumers if not needed (depending on usage)
 
 ### System workflow
