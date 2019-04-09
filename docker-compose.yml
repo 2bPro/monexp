@@ -32,9 +32,8 @@ services:
             - '9090:9090'
         volumes:
             - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-            - ./prometheus/alerts/rules.yml:/etc/prometheus/alerts/rules.yml
         depends_on:
-            - rabbitmq
+            - rabbitmq_exporter
 
     grafana:
         image: grafana/grafana

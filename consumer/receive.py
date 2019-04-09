@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-'''This is a basic version of a consumer created for the purpose
-   of testing monitoring tools such as Prometheus and Grafana
+'''This is a very basic version of a consumer created for the purpose
+   of testing monitoring tools such as Zabbix and Prometheus
 '''
 import os
 import json
@@ -33,7 +33,7 @@ def create_channel(connection):
 # --------------------------------------------------------------------------- #
 def receive_message(ch, method, properties, body):
     data = json.loads(body)
-    time.sleep(30)
+    time.sleep(2)
     print(" [C] Received " + data.get("message"))
     ch.basic_ack(delivery_tag = method.delivery_tag)
 

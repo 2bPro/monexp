@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-'''This is a basic version of a producer created for the purpose
-   of testing monitoring tools such as Prometheus and Grafana
+'''This is a very basic version of a producer created for the purpose
+   of testing monitoring tools such as Zabbix and Prometheus
 '''
 import os
 import json
@@ -14,20 +14,11 @@ def main():
     channel = create_channel(connection)
     count = 0
 
-    while count < 2000:
+    while count < 10:
         create_thread(channel)
         count = count + 1
     
     connection.close()
-
-# --------------------------------------------------------------------------- #
-def create_thread(channel):
-    '''This is initialising messages for topic exchanges'''
-    with open('/usr/src/app/messages.json', 'r') as jsf:
-        messages = json.load(jsf)
-
-        for name, message in messages.items():
-            send_message(channel, message)
 
 # --------------------------------------------------------------------------- #
 def create_channel(connection):
@@ -46,6 +37,15 @@ def create_channel(connection):
     channel.queue_declare(durable=True, queue='jobs_queue')
 
     return channel
+
+# --------------------------------------------------------------------------- #
+def create_thread(channel):
+    '''This is initialising messages for topic exchanges'''
+    with open('/usr/src/app/messages.json', 'r') as jsf:
+        messages = json.load(jsf)
+
+        for name, message in messages.items():
+            send_message(channel, message)
 
 # --------------------------------------------------------------------------- #
 def send_message(channel, message):
