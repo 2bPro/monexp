@@ -20,10 +20,14 @@ def main():
 def create_channel(connection):
     print("Creating channel...")
     channel = connection.channel()
+    channel.exchange_declare(exchange='jobs_queue', exchange_type='fanout')
 
-    channel.queue_declare(durable=True, queue='jobs_queue')
+    result = channel.queue_declare('', exclusive=True)
+    queue_name = result.method.queue
 
-    channel.basic_consume(queue='jobs_queue',
+    channel.queue_bind(exchange='jobs_queue', queue=queue_name)
+
+    channel.basic_consume(queue=queue_name,
                           on_message_callback=receive_message,
                          )
 

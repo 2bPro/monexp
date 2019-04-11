@@ -33,8 +33,7 @@ def create_channel(connection):
     '''
     print("Creating channel...")
     channel = connection.channel()
-    channel.confirm_delivery()
-    channel.queue_declare(durable=True, queue='jobs_queue')
+    channel.exchange_declare(exchange='jobs_queue', exchange_type='fanout')
 
     return channel
 
@@ -50,8 +49,8 @@ def create_thread(channel):
 # --------------------------------------------------------------------------- #
 def send_message(channel, message):
     print(" [P] Sending message...")
-    channel.basic_publish(exchange='',
-                          routing_key='jobs_queue',
+    channel.basic_publish(exchange='jobs_queue',
+                          routing_key='',
                           body=json.dumps(message),
                           properties=pika.BasicProperties(
                               delivery_mode = 2,  # message persistency 0.2
