@@ -3,34 +3,11 @@ RabbitMQ monitored with Prometheus and Grafana in Docker Compose
 
 The purpose of this project is to monitor a simple RabbitMQ queue and automatically take action on unusual activity.
 
-### Zabbix vs Prometheus
-#### General
-* Zabbix is older and decreasingly used comparing with Prometheus - it is more stable but it has less online support
-* Zabbix is based on C and PHP while Prometheus is based on GoLang
-* Zabbix stores data in RDBs while Prometheus stores data in its own, non-relational DB with a flexible query language
-* Zabbix has its own built-in visualisation tools while Prometheus also supports third party visualisation tools such as Grafana  
-* Zabbix is built for machine monitoring while Prometheus can also be used to monitor web services and data centers
-* Zabbix has some embedded execution on alert capabilities while Prometheus is relying on external tools being able to only generate alerts but not take action based on them
-
-#### Security
-[Zabbix Security](https://www.zabbix.com/documentation/current/manual/encryption)
-[Prometheus Security](https://prometheus.io/docs/operating/security/)
-
-#### Language - Golang
-* opensource
-* lighter and faster
-* simple structure and syntax - easy to learn, use and maintain
-* like C and Java, it supports concurrency but makes it easier thanks to goroutines, channels, and garbage collection
-* better cross-platform support
-* less flexibility than dynamically typed languages
-* lack of 3rd party modules
-* very different structure and syntax compared with C-based languages
-
-Considering these differences between the two technologies, Prometheus has been chosen for the monitoring of the Farr system and the following observations have been taken during the basic implementation of a messaging system independent of Farr with the purpose of discovering its capabilities and limitations.
-
 Please keep in mind that this project is at a very basic level due to work on this being started on the 28th of March and lack of experience with monitoring systems. Hopefully some of the documentation and observations here will provide a base for the future monitoring system.
 
-### Useful Documentation
+### Useful Links
+[A review of queuing and monitoring tools](https://docs.google.com/presentation/d/1E9UC7Z4gX9Nnxdm-bwKdcTaw7ntdBsG_PwtkhZVzl1M/edit#slide=id.gc6f73a04f_0_0)
+
 #### RabbitMQ
 * [What is RabbitMQ](https://www.cloudamqp.com/blog/2015-05-18-part1-rabbitmq-for-beginners-what-is-rabbitmq.html)
 * [Official basic queue and exchange tutorial](https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
@@ -106,7 +83,7 @@ After setting up the dashboard, select a name, folder and select the previously 
 
 On the dashboard you should be able to see that the RabbitMQ server is up and running and for how long, the number of exchanges between the producer and the consumer, the number of channels, consumers, connections, queues, the status of the messages and how many of them are, the total number of messages in the queue, how much of RabbitMQ's memory is used in the transfer, number of used file descriptors and number of open sockets.
 
-![Looking at the dashboard](https://drive.google.com/uc?export=view&id=1z9pz1JhevHJ_G2bxeY4UG2_x3dGmN0w-)
+![Looking at the dashboard](https://drive.google.com/uc?export=view&id=1lH_GR5Mu6Ae1fexs50H2bA6yD11TGrd3)
 
 ### System workflow
 In order to make RabbitMQ communicate with Prometheus, an exporter is required to translate the metric readings from RabbitMQ format to Prometheus format. This is achieved with the help of rabbitmq_exporter. 
@@ -118,7 +95,7 @@ Alertmanager handles alerts sent by Prometheus, allowing their manipulation and 
 Prometheus executor can execute commands or run scripts based on alert notifications. From the documentation it has been confirmed that it can be used to reboot systems on error, the question would be if it could be used to dynamically scale the number of consumers depending on RabbitMQ's performance. This could be done with the help of rules based on specific performance activity inside Prometheus which would be communicated to the executor via the alertmanager. The executor then would decide what action to take and execute it in order to rectify, prevent an issue or balance resources.
 
 #### Activity subject to action
-* number of unacknowledged messages (if high and close to no of delivered for long periods of time)
+* number of unacknowledged messages (if high and close to number of delivered messages for long periods of time)
 * number of ready messages (if high for long periods of time)
 * memory usage (if increasing)
 * number of consumers (if less than expected)
@@ -127,7 +104,7 @@ Prometheus executor can execute commands or run scripts based on alert notificat
 
 #### Actions
 * restart consumer if failed
-* start additional consumers in order to alleviate pressure on the consumer(s)
+* start additional consumers in order to alleviate pressure on the current consumer(s)
 * stop consumers if not needed (depending on usage)
 
 ![Monitoring System Workflow](https://drive.google.com/uc?export=view&id=1zOLxaNZxBn-yx1_Ecb9_Ug4iQeGPCU9k)
