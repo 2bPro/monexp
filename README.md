@@ -13,7 +13,6 @@ Please keep in mind that this project is at a very basic level due to work on th
 * [Official basic queue and exchange tutorial](https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
 * [Pika](https://pika.readthedocs.io/en/stable/intro.html)
 * [Best practice](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html)
-* [Finding bottlenecks](https://www.rabbitmq.com/blog/2014/04/14/finding-bottlenecks-with-rabbitmq-3-3/)
 * [Prometheus exporter](https://github.com/kbudde/rabbitmq_exporter)
 
 #### Prometheus
@@ -54,7 +53,7 @@ RabbitMQ's management console overview section shows two main graphs, one for qu
 
 ![Creating a data source](https://drive.google.com/uc?export=view&id=1fqjLDC3wOVSXaZycATAsYtDyHsD0PwwU)
 
-Below, under 'Global counts', you can see a count of the connections, channels, exchanges, queues and consumers. This is followed by a description of any existent nodes inside the RabbitMQ cluster together with how long they have been up and running and how much of the resources they have been consuming since.
+Below, under 'Global counts', there can be found a count of the connections, channels, exchanges, queues and consumers. This is followed by a description of any existent nodes inside the RabbitMQ cluster together with how long they have been up and running and how much of the resources they have been consuming since.
 
 The connections tab shows the current connections with the RabbitMQ server, including the connection onto which it opperates, the state, protocol (AMQP), the number of active channels using the connection and whether the connection is secured with SSL.
 
@@ -66,22 +65,22 @@ Clicking on the connection will show the connection's details such as activity, 
 
 The channel tab shows all RabbitMQ's channels and in a similar way to the connections these can be expanded for further specific details.
 
-An exchange is the procedure used by the producer to send the messages. It can either be sending them to all consumers or directly to a specific consumer or to consumers interested in a specific topic. The exchange tab shows all defined exchanges and their types. Clicking on an exchange can allow you to see what queues are added to the exchange and you may add more bindings or delete the exchange.
+An exchange is the procedure used by the producer to send the messages. It can either be sending them to all consumers, directly to a specific consumer or to consumers interested in a specific topic. The exchange tab shows all defined exchanges and their types. Clicking on an exchange can allow the visualisation of what queues are added to the exchange and allows the addition of more bindings or deletion of exchanges.
 
 ![RMQ Exchanges](https://drive.google.com/uc?export=view&id=16lJsuWXVNCM8cWzXqmNqVTsPC7k0SCOE)
 
-In the queues tab you can find and manipulate all available queues starting with checking the consumers connected to it, the bindings, publishing, getting and moving of messages, deletion or purge of queues and runtime metrics.
+In the queues tab, runtime metrics can be visualised as well as all available queues. These can also be manipulated starting with checking the consumers connected to it, the bindings, publishing, getting and moving of messages, deletion or purge of queues.
 
 ![RMQ Queues](https://drive.google.com/uc?export=view&id=1jF9QeoCDyWFPDEjNtKptYIevoo1s1Stq)
 
 And finally, the Admin view offers the possibility of adding and deleting users, changing user permissions and setting up virtual hosts.
 
 #### Prometheus
-Prometheus's management console is very simple and easy to use. The main page holds a query field and a graphical representation of the query results. Right next to the 'Execute' button there is a list of main queries available for general use. These can, however, be expanded on and can be later used as rules for alarm configurations and more detailed visual representations of the data. Documentation on the basics of Prometheus' querying language can be found above.
+Prometheus's management console has basic structure and options that can offer valuable insight into the system's state and performance. The main page holds a query field and a graphical representation of the query results. Right next to the 'Execute' button there is a list of main queries available for general use. These can, however, be expanded on and can be later used as rules for alarm configurations and more detailed visual representations of the data. Documentation on the basics of Prometheus' querying language can be found above.
 
 ![Prometheus Graphs Page](https://drive.google.com/uc?export=view&id=1XLKVZjlMENxpj3YzQDIE5VoXRsB2Dzx8)
 
-A sample query indicates the percentage of the availability of the current consumer. It can be observed that the consumer struggles to ingest all the messages considering a delay of three seconds on every ingest. This is particularly useful for testing queries for alert rules.
+A sample query indicates the percentage of the availability of the current consumer. It can be observed that the consumer struggles to ingest all the messages considering a delay of three seconds on every ingest. This is particularly useful for testing queries for alert rules and how a slow consumer can affect the workflow.
 
 ![Looking for bottlenecks](https://drive.google.com/uc?export=view&id=1CxrmnPfHkj04G_eukswhEdG0MbBSocZ9)
 
@@ -89,7 +88,7 @@ Prometheus also offers a simple view of the defined alarms, together with their 
 
 ![Alerts](https://drive.google.com/uc?export=view&id=1WzZUXHsBbE4iooXKoGImpmUzmxw8u2Ur)
 
-Under the status option there can be found the rules for these alerts together with the targets, runtime and build information and more.
+Under the status option there can be found the rules for these alerts together with the targets, runtime and build information.
 
 ![Rules](https://drive.google.com/uc?export=view&id=1HP_pjJheTQcWFKUT7yv-HWI-iE51Iirc)
 
@@ -98,17 +97,17 @@ The first step when monitoring with Grafana is creating a Data Source for Promet
 
 ![Creating a data source](https://drive.google.com/uc?export=view&id=1s9AbCskDcmLO6DPoIMNXMmISeqNYMw0L)
 
-This will open a set of data source options recognised by Grafana. Selecting Prometheus will take you to the following page. Here, select the host and port where Prometheus management console is currently running and specify that this is being accessed via a browser. Clicking save and test should show a confirmation message for the creation of the data source and a confirmation message for a successful connection.
+This will open a set of data source options recognised by Grafana. Selecting Prometheus will open the following page. Here, select the host and port where Prometheus management console is currently running and specify that this is being accessed via a browser. Clicking save and test will show a confirmation message for the creation of the data source and a confirmation message for a successful connection.
 
 ![Connecting to Prometheus](https://drive.google.com/uc?export=view&id=1WrCPTvS6MKFdIh2PjxEIAF70KmXZsULm)
 
-Now you can choose whether to create a new dashboard or use pre-built community dashboards. I imported a community dashboard with ID '2121'. To import this, open the create options in the side menu and select import. Type in the dashboard ID and load dashboard or copy and paste the JSON found under the 'prometheus' folder. This has two additional graphs showing the number of active alerts and the availability of the consumers.
+Now there is the choice between the creation of a new dashboard or usage of pre-built community dashboards. This repository is based on an imported community dashboard with ID '2121'. The repository also contains the JSON file of an expanded version of this dashboard containing two additional graphs showing the number of active alerts and the availability of the consumers. To import a dashboard, open the create options in the side menu and select import. Type in the dashboard ID for the base community version or copy and paste the JSON found under the 'prometheus' for the expanded version.
 
 After setting up the dashboard, select a name, folder and select the previously created data source. Finally, click import to load the dashboard.
 
 ![Importing dashboard](https://drive.google.com/uc?export=view&id=1G-3wK9CXblRSya_EmL2_AH7NqGq1WUMD)
 
-On the dashboard you should be able to see that the RabbitMQ server is up and running and for how long, the number of exchanges between the producer and the consumer, the number of channels, consumers, connections, queues, the status of the messages and how many of them are, the total number of messages in the queue, how much of RabbitMQ's memory is used in the transfer, number of used file descriptors and number of open sockets.
+On the dashboard you should be able to see that RabbitMQ server is up and running and for how long, the number of exchanges between the producer and the consumer, the number of channels, consumers, connections, queues, the status of the messages and how many of them are, the total number of messages in the queue, how much of RabbitMQ's memory is used in the transfer, number of used file descriptors and number of open sockets.
 
 ![Looking at the dashboard](https://drive.google.com/uc?export=view&id=1lH_GR5Mu6Ae1fexs50H2bA6yD11TGrd3)
 
