@@ -13,11 +13,13 @@ Please keep in mind that this project is at a very basic level due to work on th
 * [Official basic queue and exchange tutorial](https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
 * [Pika](https://pika.readthedocs.io/en/stable/intro.html)
 * [Best practice](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html)
+* [Finding bottlenecks](https://www.rabbitmq.com/blog/2014/04/14/finding-bottlenecks-with-rabbitmq-3-3/)
 * [Prometheus exporter](https://github.com/kbudde/rabbitmq_exporter)
 
 #### Prometheus
 * [Official documentation](https://prometheus.io/docs/introduction/overview/)
 * [Prometheus integrated alerts](https://awesome-prometheus-alerts.grep.to/rules.html)
+* [Prometheus querying basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)
 * [Alert manager](https://itnext.io/prometheus-with-alertmanager-f2a1f7efabd6)
 * [Alert executor](https://github.com/imgix/prometheus-am-executor)
 
@@ -37,6 +39,9 @@ This will make the following localhost ports available for monitoring:
 * 9090 for Prometheus
 * 3000 for Grafana (username and password 'admin')
 
+To stop services, press Ctrl+C and the run the following command:
+```docker-compose down```
+
 ### Basic Utilisation
 #### RabbitMQ
 RabbitMQ's management console overview section shows two main graphs, one for queued messages and one for the message rates and their statuses.
@@ -49,7 +54,7 @@ RabbitMQ's management console overview section shows two main graphs, one for qu
 
 ![Creating a data source](https://drive.google.com/uc?export=view&id=1fqjLDC3wOVSXaZycATAsYtDyHsD0PwwU)
 
-Below, under 'Global Count', you can see a count of the connections, channels, exchanges, queues and consumers. This is followed by a description of any existent nodes inside the RabbitMQ cluster together with how long they have been up and running and how much of the resources they have been consuming since.
+Below, under 'Global counts', you can see a count of the connections, channels, exchanges, queues and consumers. This is followed by a description of any existent nodes inside the RabbitMQ cluster together with how long they have been up and running and how much of the resources they have been consuming since.
 
 The connections tab shows the current connections with the RabbitMQ server, including the connection onto which it opperates, the state, protocol (AMQP), the number of active channels using the connection and whether the connection is secured with SSL.
 
@@ -61,10 +66,32 @@ Clicking on the connection will show the connection's details such as activity, 
 
 The channel tab shows all RabbitMQ's channels and in a similar way to the connections these can be expanded for further specific details.
 
-The exchange tab shows all defined exchanges and their types.
+An exchange is the procedure used by the producer to send the messages. It can either be sending them to all consumers or directly to a specific consumer or to consumers interested in a specific topic. The exchange tab shows all defined exchanges and their types. Clicking on an exchange can allow you to see what queues are added to the exchange and you may add more bindings or delete the exchange.
+
+![RMQ Exchanges](https://drive.google.com/uc?export=view&id=16lJsuWXVNCM8cWzXqmNqVTsPC7k0SCOE)
+
+In the queues tab you can find and manipulate all available queues starting with checking the consumers connected to it, the bindings, publishing, getting and moving of messages, deletion or purge of queues and runtime metrics.
+
+![RMQ Queues](https://drive.google.com/uc?export=view&id=1jF9QeoCDyWFPDEjNtKptYIevoo1s1Stq)
+
+And finally, the Admin view offers the possibility of adding and deleting users, changing user permissions and setting up virtual hosts.
 
 #### Prometheus
+Prometheus's management console is very simple and easy to use. The main page holds a query field and a graphical representation of the query results. Right next to the 'Execute' button there is a list of main queries available for general use. These can, however, be expanded on and can be later used as rules for alarm configurations and more detailed visual representations of the data. Documentation on the basics of Prometheus' querying language can be found above.
 
+![Prometheus Graphs Page](https://drive.google.com/uc?export=view&id=1XLKVZjlMENxpj3YzQDIE5VoXRsB2Dzx8)
+
+A sample query indicates the percentage of the availability of the current consumer. It can be observed that the consumer struggles to ingest all the messages considering a delay of three seconds on every ingest. This is particularly useful for testing queries for alert rules.
+
+![Looking for bottlenecks](https://drive.google.com/uc?export=view&id=1CxrmnPfHkj04G_eukswhEdG0MbBSocZ9)
+
+Prometheus also offers a simple view of the defined alarms, together with their details and status. Options for the manipulation of alerts does not take place here but in alertmanager's console. 
+
+![Alerts](https://drive.google.com/uc?export=view&id=1WzZUXHsBbE4iooXKoGImpmUzmxw8u2Ur)
+
+Under the status option there can be found the rules for these alerts together with the targets, runtime and build information and more.
+
+![Rules](https://drive.google.com/uc?export=view&id=1HP_pjJheTQcWFKUT7yv-HWI-iE51Iirc)
 
 #### Grafana
 The first step when monitoring with Grafana is creating a Data Source for Prometheus in order to link Grafana to the Prometheus metric readings of RabbitMQ. In order to do this, open the configuration options in the side menu and select the 'Data Source' option.
@@ -75,7 +102,7 @@ This will open a set of data source options recognised by Grafana. Selecting Pro
 
 ![Connecting to Prometheus](https://drive.google.com/uc?export=view&id=1WrCPTvS6MKFdIh2PjxEIAF70KmXZsULm)
 
-Now you can choose whether to create a new dashboard or use pre-built community dashboards. I imported a community dashboard with ID '2121'. To import this, open the create options in the side menu and select import. Type in the dashboard ID and load dashboard or copy and paste the JSON found under the 'prometheus' folder. This has an additional graph showing the number of active alerts.
+Now you can choose whether to create a new dashboard or use pre-built community dashboards. I imported a community dashboard with ID '2121'. To import this, open the create options in the side menu and select import. Type in the dashboard ID and load dashboard or copy and paste the JSON found under the 'prometheus' folder. This has two additional graphs showing the number of active alerts and the availability of the consumers.
 
 After setting up the dashboard, select a name, folder and select the previously created data source. Finally, click import to load the dashboard.
 
@@ -95,6 +122,7 @@ Alertmanager handles alerts sent by Prometheus, allowing their manipulation and 
 Prometheus executor can execute commands or run scripts based on alert notifications. From the documentation it has been confirmed that it can be used to reboot systems on error, the question would be if it could be used to dynamically scale the number of consumers depending on RabbitMQ's performance. This could be done with the help of rules based on specific performance activity inside Prometheus which would be communicated to the executor via the alertmanager. The executor then would decide what action to take and execute it in order to rectify, prevent an issue or balance resources.
 
 #### Activity subject to action
+* consumer utilisation (if less than 100%)
 * number of unacknowledged messages (if high and close to number of delivered messages for long periods of time)
 * number of ready messages (if high for long periods of time)
 * memory usage (if increasing)

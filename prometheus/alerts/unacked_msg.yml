@@ -1,11 +1,11 @@
 groups:
   - name: CheckUnacked
     rules:
-      - alert: ConsumerStruggling
-        expr: rabbitmq_queue_messages_unacknowledged_total > 1000
+      - alert: UnackMsgs
+        expr: rabbitmq_queue_messages_unacknowledged_total > 5000
         for: 30m
         labels:
           severity: warning
         annotations:
           summary: "Too many unacknowledged messages in queue (instance {{ $labels.instance }})"
-          description: "Queue is filling up (> 1000 msgs)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+          description: "Queue is filling up (> 5000 msgs)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
