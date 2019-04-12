@@ -37,6 +37,19 @@ services:
         depends_on:
             - rabbitmq_exporter
 
+    alertmanager:
+        image: 'prom/alertmanager'
+        ports:
+            - '9093:9093'
+        volumes:
+            - ./prometheus/alertmanager/alertmanager.yml:/etc/prometheus/alertmanager/alertmanager.yml
+            - ./prometheus/alertmanager/data:/prometheus/alertmanager/data
+        command:
+            - '--config.file=/etc/prometheus/alertmanager/alertmanager.yml'
+            - '--storage.path=/prometheus/alertmanager/data'
+        depends_on: 
+            - prometheus
+
     grafana:
         image: grafana/grafana
         ports:
