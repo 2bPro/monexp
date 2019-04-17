@@ -1,7 +1,7 @@
 groups:
   - name: CheckConsumers
     rules:
-      - alert: NoConsumer
+      - alert: NoConsumers
         expr: rabbitmq_queue_consumers == 0
         for: 30m
         labels:

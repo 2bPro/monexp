@@ -37,7 +37,7 @@ def create_channel(connection):
 # --------------------------------------------------------------------------- #
 def receive_message(ch, method, properties, body):
     data = json.loads(body)
-    time.sleep(3)
+    time.sleep(1)
     print(" [C] Received " + data.get("message"))
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
