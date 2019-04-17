@@ -3,8 +3,6 @@ RabbitMQ monitored with Prometheus and Grafana in Docker Compose
 
 The purpose of this project is to monitor a simple RabbitMQ queue and automatically take action on unusual activity.
 
-Please keep in mind that this project is at a very basic level due to work on this being started on the 28th of March and lack of experience with monitoring systems. Hopefully some of the documentation and observations here will provide a base for the future monitoring system.
-
 ### Useful Links
 [A review of queuing and monitoring tools](https://docs.google.com/presentation/d/1E9UC7Z4gX9Nnxdm-bwKdcTaw7ntdBsG_PwtkhZVzl1M/edit#slide=id.gc6f73a04f_0_0)
 
@@ -36,6 +34,7 @@ To install, clone the repository and run the following commands in the root fold
 This will make the following localhost ports available for monitoring:
 * 15672 for RabbitMQ (username and password 'guest')
 * 9090 for Prometheus
+* 9093 for Alertmanager
 * 3000 for Grafana (username and password 'admin')
 
 To stop services, press Ctrl+C and the run the following command:
@@ -91,6 +90,21 @@ Prometheus also offers a simple view of the defined alarms, together with their 
 Under the status option there can be found the rules for these alerts together with the targets, runtime and build information.
 
 ![Rules](https://drive.google.com/uc?export=view&id=1HP_pjJheTQcWFKUT7yv-HWI-iE51Iirc)
+
+#### Alertmanager
+Alertmanager will require a Slack webhook URL defined in the configuration file for notifications. This requires the setup of an app in your Slack workspace, the activation of incoming webhooks and the addition of a new webhook to the workspace with a defined channel for the alert notifications to target. More detailed instructions on how to do this can be found [here](https://api.slack.com/incoming-webhooks).
+
+Please note that the alertmanager console will only show alerts once they are fired by Prometheus.
+
+![Alertmanager console](https://drive.google.com/uc?export=view&id=12IRbZN02Pl1BPJCHeuHKW4MRI3Vc8s1C)
+
+Alertmanager will then send a notification with the details of the alert on the specified Slack channel.
+
+![Slack notification](https://drive.google.com/uc?export=view&id=1-x01fIg79KN6cznxpPfH-p837WxcjO8T)
+
+When this issue is resolved, another notification will be sent to Slack.
+
+![Slack resolved](https://drive.google.com/uc?export=view&id=1scBh1hJ-38j2Qnw6jTgEobKcppfwfqdL)
 
 #### Grafana
 The first step when monitoring with Grafana is creating a Data Source for Prometheus in order to link Grafana to the Prometheus metric readings of RabbitMQ. In order to do this, open the configuration options in the side menu and select the 'Data Source' option.
