@@ -1,5 +1,9 @@
 route:
   receiver: 'slack'
+  routes:
+    - receiver: 'executor'
+      match:
+        alertname: ConsumerAvailability
 
 receivers:
   - name: 'slack'
@@ -8,4 +12,8 @@ receivers:
         text: "{{ .CommonAnnotations.description }}"
         username: 'Prometheus'
         channel: '#general'
-        api_url: 'https://hooks.slack.com/services/<slack-id>'
+        api_url: 'https://hooks.slack.com/services/AHXK2CV6U'
+  
+  - name: 'executor'
+    webhook_configs:
+      - url: http://172.20.120.67:8080

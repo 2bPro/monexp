@@ -24,12 +24,15 @@ The purpose of this project is to monitor a simple RabbitMQ queue and automatica
 * [Official documentation](http://docs.grafana.org/)
 * [Pre-built dashboards](https://grafana.com/dashboards?search=rabbitmq)
 
-### Intstallation
+### Intstallation and Run
 To install, clone the repository and run the following commands in the root folder:
 
 ```docker-compose build```
 
 ```docker-compose up```
+
+To start more instances of the consumer, use docker-compose's scale flag:
+```docker-compose up --scale consumer=<number_of_instances>```
 
 This will make the following localhost ports available for monitoring:
 * 15672 for RabbitMQ (username and password 'guest')
@@ -91,7 +94,7 @@ Under the status option there can be found the rules for these alerts together w
 
 ![Rules](https://drive.google.com/uc?export=view&id=1HP_pjJheTQcWFKUT7yv-HWI-iE51Iirc)
 
-#### Alertmanager
+#### Alertmanager  
 Alertmanager will require a Slack webhook URL defined in the configuration file for notifications. This requires the setup of an app in your Slack workspace, the activation of incoming webhooks and the addition of a new webhook to the workspace with a defined channel for the alert notifications to target. More detailed instructions on how to do this can be found [here](https://api.slack.com/incoming-webhooks).
 
 Please note that the alertmanager console will only show alerts once they are fired by Prometheus.
@@ -106,6 +109,22 @@ When this issue is resolved, another notification will be sent to Slack.
 
 ![Slack resolved](https://drive.google.com/uc?export=view&id=1scBh1hJ-38j2Qnw6jTgEobKcppfwfqdL)
 
+#### Prometheus-Executor
+This golang based tool is used to listen to the alert manager and trigger actions to fix the system issues causing the notifications. These actions can be restarting a service, launching another one to balance workload and more to the limits of bash scripting.
+
+To build the executor, clone prometheus-am-executor in the executor file, change line 7 of the Makefile to ```export  GOPATH := ${CURDIR}/prometheus-am-executor-go```, save and run ```make all```. This will create a 'prometheus-am-executor-go' file which contains an executable 'prometheus-am-executor' script inside a bin folder.
+
+To run the executor, run the following command in a terminal window from the bin file containing the 'prometheus-am-executor' script:
+```./prometheus-am-executor [options] ../../action_scripts/test_script.sh```
+
+Where the options are:
+```
+-l string
+    for HTTP port to listen on (default is 8080)
+-v 
+    to enable verbose/debug logging
+``` 
+
 #### Grafana
 The first step when monitoring with Grafana is creating a Data Source for Prometheus in order to link Grafana to the Prometheus metric readings of RabbitMQ. In order to do this, open the configuration options in the side menu and select the 'Data Source' option.
 
@@ -115,7 +134,7 @@ This will open a set of data source options recognised by Grafana. Selecting Pro
 
 ![Connecting to Prometheus](https://drive.google.com/uc?export=view&id=1WrCPTvS6MKFdIh2PjxEIAF70KmXZsULm)
 
-Now there is the choice between the creation of a new dashboard or usage of pre-built community dashboards. This repository is based on an imported community dashboard with ID '2121'. The repository also contains the JSON file of an expanded version of this dashboard containing two additional graphs showing the number of active alerts and the availability of the consumers. To import a dashboard, open the create options in the side menu and select import. Type in the dashboard ID for the base community version or copy and paste the JSON found under the 'prometheus' for the expanded version.
+Now there is the choice between the creation of a new dashboard or usage of pre-built community dashboards. This repository is based on an imported community dashboard with ID '2121'. The repository also contains the JSON file of an expanded version of this dashboard containing two additional graphs showing the number of active alerts and the availability of the consumers. To import a dashboard, open the create options in the side menu and select import. Type in the dashboard ID for the base community version or copy and paste the JSON found under the 'prometheus' folder for the expanded version.
 
 After setting up the dashboard, select a name, folder and select the previously created data source. Finally, click import to load the dashboard.
 
@@ -124,6 +143,8 @@ After setting up the dashboard, select a name, folder and select the previously 
 On the dashboard you should be able to see that RabbitMQ server is up and running and for how long, the number of exchanges between the producer and the consumer, the number of channels, consumers, connections, queues, the status of the messages and how many of them are, the total number of messages in the queue, how much of RabbitMQ's memory is used in the transfer, number of used file descriptors and number of open sockets.
 
 ![Looking at the dashboard](https://drive.google.com/uc?export=view&id=1lH_GR5Mu6Ae1fexs50H2bA6yD11TGrd3)
+
+One major disadvantage of using Grafana as a Docker container is the volatility of the dashboards. The expectations of monitoring systems in general are for them to be constantly running services which, it could be argued, do not require the use of tools created for services to be easily and quickly restarted such as Docker. The use of Grafana outside Docker allows preservation of monitoring dashboards and settings with every run.
 
 ### System workflow
 In order to make RabbitMQ communicate with Prometheus, an exporter is required to translate the metric readings from RabbitMQ format to Prometheus format. This is achieved with the help of rabbitmq_exporter. 
