@@ -15,8 +15,8 @@ The purpose of this project is to monitor a simple RabbitMQ queue and automatica
 * [Official documentation](https://prometheus.io/docs/introduction/overview/)
 * [Prometheus integrated alerts](https://awesome-prometheus-alerts.grep.to/rules.html)
 * [Prometheus querying basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)
-* [Alert manager](https://itnext.io/prometheus-with-alertmanager-f2a1f7efabd6)
-* [Alert executor](https://github.com/imgix/prometheus-am-executor)
+* [Alertmanager](https://itnext.io/prometheus-with-alertmanager-f2a1f7efabd6)
+* [Script Executor](https://github.com/imgix/prometheus-am-executor)
 
 ### Grafana
 * [Official documentation](http://docs.grafana.org/)
@@ -28,10 +28,10 @@ The purpose of this project is to monitor a simple RabbitMQ queue and automatica
 * [Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 * [Mac](https://docs.docker.com/docker-for-mac/install/)
 
-**Step 2:** Clone the repository
+**Step 2:** Clone the rabbit-prometheus-monitor repository  
 ```git clone https://github.com/2bPro/rabbit-prometheus-monitor.git```
 
-**Step 3:** Change directory to the rabbit-prometheus-monitor folder and run the following commands
+**Step 3:** Change directory to the rabbit-prometheus-monitor folder and run the following commands  
 
 ```docker-compose build```
 
@@ -46,13 +46,15 @@ This will make the following localhost ports available for monitoring:
 * 9093 for Alertmanager
 * 3000 for Grafana (username and password 'admin')
 
-**Step 4:** Stop the services, by pressing Ctrl+C and then running the following command
+**Step 4:** Stop the services, by pressing Ctrl+C and then running the following command  
 ```docker-compose down```
 
 ## Installation and Run Instructions for CentOS:
 * [Prometheus](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-on-CentOS)
 * [RabbitMQ Exporter](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-RabbitMQ-Exporter-on-CentOS)
-* [Alertmanager]()
+* [Alertmanager](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Alertmanager-on-CentOS)
+* [Script Executor]()
+* [Grafana](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Grafana-on-CentOS)
 
 ## Basic Utilisation
 * [RabbitMQ](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-RabbitMQ)
