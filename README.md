@@ -46,15 +46,17 @@ This will make the following localhost ports available for monitoring:
 * 9093 for Alertmanager
 * 3000 for Grafana (username and password 'admin')
 
-**Step 4:** Stop the services, by pressing Ctrl+C and then running the following command  
+**Step 4:** Stop the services by pressing Ctrl+C and then running the following command  
 ```docker-compose down```
 
 ## Installation and Run Instructions for CentOS:
 * [Prometheus](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-on-CentOS)
 * [RabbitMQ Exporter](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-RabbitMQ-Exporter-on-CentOS)
 * [Alertmanager](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Alertmanager-on-CentOS)
-* [Script Executor]()
+* [Script Executor](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-Executor-on-CentOS)
 * [Grafana](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Grafana-on-CentOS)
+
+**Note:** It is recommended that the installation instructions to be read and implemented in the suggested order because of the dependencies between the tools and plugins (eg. RabbitMQ exporter requires Prometheus, Alertmanager requires Prometheus and the Executor requires Alertmanager).
 
 ## Basic Utilisation
 * [RabbitMQ](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-RabbitMQ)
