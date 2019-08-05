@@ -12,7 +12,7 @@ receivers:
         text: "{{ .CommonAnnotations.description }}"
         username: 'Prometheus'
         channel: '#general'
-        api_url: 'https://hooks.slack.com/services/AHXK2CV6U'
+        api_url: 'https://hooks.slack.com/services/<slack-id>'
   
   - name: 'executor'
     webhook_configs:

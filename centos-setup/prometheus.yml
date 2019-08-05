@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 10s
+
+rule_files:
+  - alert.rules.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - localhost:9093
+
+scrape_configs:
+  - job_name: ‘prometheus’
+    static_configs:
+      - targets: [‘localhost:9090’]
+
+  - job_name: ‘rabbitmq’
+    static_configs:
+      - targets: [‘localhost:15672’]
+    metrics_path: /api/metrics

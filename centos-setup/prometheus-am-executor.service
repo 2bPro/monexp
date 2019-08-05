@@ -1,0 +1,14 @@
+[Unit] 
+Description=Prometheus script executor 
+Documentation=https://github.com/imgix/prometheus-am-executor 
+
+[Service] 
+Restart=always 
+ExecStart=/root/go/src/prometheus-am-executor/prometheus-am-executor -v \
+/root/go/src/prometheus-am-executor/script.sh 
+ExecReload=/bin/kill -HUP $MAINPID 
+TimeoutStopSec=20s 
+SendSIGKILL=no 
+
+[Install] 
+WantedBy=multi-user.target 
