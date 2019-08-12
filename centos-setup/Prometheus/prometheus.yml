@@ -19,3 +19,8 @@ scrape_configs:
     static_configs:
       - targets: [‘localhost:15672’]
     metrics_path: /api/metrics
+
+  - job_name: ‘mongodb’
+    static_configs:
+      - targets: [‘localhost:9001’]
+    metrics_path: /metrics

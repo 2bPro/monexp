@@ -1,0 +1,13 @@
+[Unit] 
+Description=MongoDB Prometheus Exporter 
+Documentation=https://github.com/dcu/mongodb_exporter
+
+[Service] 
+Restart=always 
+ExecStart=/root/go/src/github.com/dcu/mongodb_exporter/mongodb_exporter -mongodb.collect.database
+ExecReload=/bin/kill -HUP $MAINPID 
+TimeoutStopSec=20s 
+SendSIGKILL=no 
+
+[Install] 
+WantedBy=multi-user.target
