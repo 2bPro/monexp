@@ -1,56 +1,95 @@
-# Home
-  [Project Description](https://github.com/2bPro/rabbit-prometheus-monitor/wiki) 
+## Introduction  
+The purpose of this project is mainly setting up a monitoring stack and experimenting with the currently most popular monitoring tools:
+* Grafana
+* Prometheus
+* Alertmanager
+* Loki
+    * Promtail
+* Prometheus executor
 
----
+In addition, it covers the setup, basic utilisation and monitoring of the following as an example application of the monitoring stack:
+* RabbitMQ
+* MongoDB
 
-# Monitoring set up
-### Grafana
-  [Grafana online installation and setup](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Grafana-on-CentOS)
+## Contents
+* [Installation and Run Instructions for CentOS](#installation-and-run-instructions-for-centos)
+* [Installation and Run Instructions for Docker](#installation-and-run-instructions-for-docker)
+* [Basic Utilisation](basic-utilisation)
+* [Useful Links](useful-links)
 
-  [Grafana offline installation and setup](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Grafana-Offline-Installation) 
+## Installation and Run Instructions for CentOS  
+*  [Grafana](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Grafana-on-CentOS)
+*  [Prometheus](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-on-CentOS)
+*  [Alertmanager](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Alertmanager-on-CentOS)
+*  [Prometheus Executor](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-Executor-on-CentOS)
+*  [Loki](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Loki-binary-install)
+*  [Promtail](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Promtail-binary-install)
 
-  [Grafana basic usage](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-Grafana)	 
+*  [RabbitMQ Exporter](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-RabbitMQ-Exporter-on-CentOS)
 
-  [Grafana alerts](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Grafana-Alerts)
+>**Note:** The configuration files described in these installation instructions can be found in the `rabbit-prometheus-monitor/centos-setup` folder. Once everything is set up, this can be tested with the consumer and producer provided in the `general` folder.
 
-## Prometheus
-  [Prometheus installation and setup](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-on-CentOS)
+## Installation and Run Instructions for Docker  
+### Step 1
+Make sure you have Docker installed on your machine. If you do not already have Docker installed, follow the following instructions depending on your operating system:  
+*  [Windows](https://docs.docker.com/docker-for-windows/install/)
+*  [Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+*  [Mac](https://docs.docker.com/docker-for-mac/install/)
 
-  [Prometheus updates](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Prometheus-Updates)
+### Step 2
+Clone rabbit-prometheus-monitor repository  
+```console
+$ git clone https://github.com/2bPro/rabbit-prometheus-monitor.git
+```
 
-  [Prometheus alerting rules](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Prometheus-Alerts)	
+### Step 3
+Copy the consumer and producer folders from the rabbit-prometheus-monitor/general folder to the rabbit-prometheus-monitor/docker-setup folder.  
+```cp -a general/. docker-setup/```
 
-  [Prometheus and plugins usage](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-Prometheus-and-Plugins)
+### Step 4
+Change directory to rabbit-prometheus-monitor/docker-setup and run the following commands:  
+```docker-compose build```
 
-### Alertmanager
-  [Alertmanager installation and setup](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Alertmanager-on-CentOS)  
+```docker-compose up```
 
-### Prometheus Executor
-  [Install Go](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Go)
+>**Note:** To start more instances of the consumer, use docker-compose scale flag  
+```console
+$ docker-compose up --scale consumer=<number_of_instances>
+```
 
-  [Prometheus Executor installation and set up](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-Prometheus-Executor-on-CentOS)
+This will make the following localhost ports available for monitoring:  
+* 15672 for RabbitMQ (username and password 'guest')
+* 9090 for Prometheus
+* 9093 for Alertmanager
+* 3000 for Grafana (username and password 'admin')
 
-  [Prometheus executor usage](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Prometheus-Executor-Usage-on-CentOS)
+### Step 5
+Stop the services by pressing Ctrl+C and then running the following command:  
+```docker-compose down```
 
-### Loki
-  [Loki binary installation](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Loki-binary-install)
+## Basic Utilisation  
+*  [RabbitMQ](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-RabbitMQ)
+*  [Prometheus and Plugins](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-Prometheus-and-Plugins)
+*  [Grafana](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-Grafana)
 
-  [Promtail binary installation](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Promtail-binary-install)
+## Useful Links  
+[A review of queuing and monitoring tools](https://docs.google.com/presentation/d/1E9UC7Z4gX9Nnxdm-bwKdcTaw7ntdBsG_PwtkhZVzl1M/edit#slide=id.gc6f73a04f_0_0)
 
----
+### RabbitMQ  
+*  [What is RabbitMQ](https://www.cloudamqp.com/blog/2015-05-18-part1-rabbitmq-for-beginners-what-is-rabbitmq.html)
+*  [Official basic queue and exchange tutorial](https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
+*  [Pika](https://pika.readthedocs.io/en/stable/intro.html)
+*  [Best practice](https://www.cloudamqp.com/blog/2017-12-29-part1-rabbitmq-best-practice.html)
+*  [Prometheus exporter](https://github.com/kbudde/rabbitmq_exporter)
 
-# Monitoring application
-## RabbitMQ
-  [RabbitMQ exporter installation](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-RabbitMQ-Exporter-on-CentOS)  
+### Prometheus  
+*  [Official documentation](https://prometheus.io/docs/introduction/overview/)
+*  [Prometheus endpoints/exporters](https://prometheus.io/docs/instrumenting/exporters/)
+*  [Prometheus integrated alerts](https://awesome-prometheus-alerts.grep.to/rules.html)
+*  [Prometheus querying basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+*  [Alertmanager](https://itnext.io/prometheus-with-alertmanager-f2a1f7efabd6)
+*  [Script Executor](https://github.com/imgix/prometheus-am-executor)
 
-  [RabbitMQ usage](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Basic-Utilisation-of-RabbitMQ)
-
-  [RabbitMQ alerting rules](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/RabbitMQ-Alerting-Rules)	
-
----
-
-## MongoDB
-  [MongoDB exporter](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/Installing-and-setting-up-MongoDB-Prometheus-Exporter-on-CentOS)	
-
-  [MongoDB alerting rules](https://github.com/2bPro/rabbit-prometheus-monitor/wiki/MongoDB-Alerting-Rules)
-  
+### Grafana  
+*  [Official documentation](http://docs.grafana.org/)
+*  [Pre-built dashboards](https://grafana.com/dashboards?search=rabbitmq)
